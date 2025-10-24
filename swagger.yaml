@@ -1,0 +1,191 @@
+---
+swagger: "2.0"
+info:
+  version: "v0.0.1"
+  title: "Library API Spec"
+  description: "This is an api for a library project that will be used in our SLO course."
+schemes:
+- "http"
+- "https"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /v1/book:
+    post:
+      tags:
+      - "Book"
+      operationId: "CreateBook"
+      parameters:
+      - in: "body"
+        name: "book"
+        required: true
+        schema:
+          $ref: "#/definitions/CreateBookRequest"
+        x-exportParamName: "Book"
+      responses:
+        "200":
+          description: "A successful response and a book is created."
+          schema:
+            $ref: "#/definitions/CreateBookResponse"
+        "403":
+          description: "Another book with the same ID exists"
+          schema:
+            $ref: "#/definitions/CreateBookResponse"
+    get:
+      tags:
+      - "Book"
+      operationId: "ListBooks"
+      responses:
+        "200":
+          description: "A successful response and a list of books is returned."
+          schema:
+            $ref: "#/definitions/ListBooksResponse"
+  /v1/book/{bookID}:
+    get:
+      tags:
+      - "Book"
+      operationId: "GetBook"
+      parameters:
+      - name: "bookID"
+        in: "path"
+        required: true
+        type: "string"
+        x-exportParamName: "BookID"
+      responses:
+        "200":
+          description: "A successful response and the book details are returned."
+          schema:
+            $ref: "#/definitions/GetBookResponse"
+        "404":
+          description: "Book not found"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      tags:
+      - "Book"
+      operationId: "UpdateBook"
+      parameters:
+      - name: "bookID"
+        in: "path"
+        required: true
+        type: "string"
+        x-exportParamName: "BookID"
+      - in: "body"
+        name: "book"
+        required: true
+        schema:
+          $ref: "#/definitions/UpdateBookRequest"
+        x-exportParamName: "Book"
+      responses:
+        "200":
+          description: "A successful response and the book is updated."
+          schema:
+            $ref: "#/definitions/UpdateBookResponse"
+        "404":
+          description: "Book not found"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      tags:
+      - "Book"
+      operationId: "DeleteBook"
+      parameters:
+      - name: "bookID"
+        in: "path"
+        required: true
+        type: "string"
+        x-exportParamName: "BookID"
+      responses:
+        "200":
+          description: "A successful response and the book is deleted."
+          schema:
+            $ref: "#/definitions/DeleteBookResponse"
+definitions:
+  CreateBookRequest:
+    type: "object"
+    properties:
+      bookID:
+        type: "string"
+      bookDescription:
+        type: "string"
+      bookTitle:
+        type: "string"
+      bookAuthor:
+        type: "string"
+  CreateBookResponse:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+      message:
+        type: "string"
+    example:
+      message: "message"
+      status: "status"
+  ListBooksResponse:
+    type: array
+    items:
+      $ref: '#/definitions/Book'
+  Book:
+    type: object
+    properties:
+      bookID:
+        type: "string"
+      bookDescription:
+        type: "string"
+      bookTitle:
+        type: "string"
+      bookAuthor:
+        type: "string"
+  GetBookResponse:
+    type: "object"
+    properties:
+      book:
+        $ref: "#/definitions/Book"
+    example:
+      book:
+        bookID: "123"
+        bookTitle: "Sample Book"
+        bookAuthor: "John Doe"
+        bookDescription: "A sample book description"
+  UpdateBookRequest:
+    type: "object"
+    properties:
+      bookDescription:
+        type: "string"
+      bookTitle:
+        type: "string"
+      bookAuthor:
+        type: "string"
+  UpdateBookResponse:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+      message:
+        type: "string"
+    example:
+      message: "Book updated successfully"
+      status: "success"
+  DeleteBookResponse:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+      message:
+        type: "string"
+    example:
+      message: "message"
+      status: "status"
+  ErrorResponse:
+    type: "object"
+    properties:
+      status:
+        type: "string"
+      message:
+        type: "string"
+    example:
+      message: "error message"
+      status: "error"
